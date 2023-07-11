@@ -7,6 +7,7 @@ import autoprefixer from "gulp-autoprefixer";
 import miniCSS from "gulp-csso";
 import bro from "gulp-bro";
 import babelify from "babelify";
+import ghPages from "gulp-gh-pages";
 
 const sass = require("gulp-sass")(require("node-sass"));
 
@@ -30,16 +31,24 @@ const routes = {
     src: "src/js/main.js",
     dest: "build/js",
   },
+  gh: {
+    src: "build/**/*",
+    publish: ".publish",
+  },
 };
 
 //사용할 task를 정의
 const pug = () =>
   gulp.src(routes.pug.src).pipe(gpug()).pipe(gulp.dest(routes.pug.dest));
-const clean = () => del([routes.pug.dest]);
+
+const clean = () => del([routes.pug.dest, routes.gh.publish]);
+
 const webserver = () =>
   gulp.src([routes.pug.dest]).pipe(ws({ livereload: true, open: true }));
+
 const img = () =>
   gulp.src(routes.img.src).pipe(image()).pipe(gulp.dest(routes.img.dest));
+
 const style = () =>
   gulp
     .src(routes.scss.src)
@@ -47,6 +56,7 @@ const style = () =>
     .pipe(autoprefixer())
     .pipe(miniCSS())
     .pipe(gulp.dest(routes.scss.dest));
+
 const js = () =>
   gulp
     .src(routes.js.src)
@@ -60,6 +70,9 @@ const js = () =>
     )
     .pipe(gulp.dest(routes.js.dest));
 
+// 연결된 remote github 페이지로 Puhlish한다 - https://mjhan.github.io/Nomadcoder_gulp/
+const github = () => gulp.src(routes.gh.src).pipe(ghPages());
+
 const watch = () => {
   gulp.watch(routes.pug.watch, pug);
   gulp.watch(routes.img.src, img);
@@ -70,7 +83,9 @@ const watch = () => {
 // task들을 그룹화해서 정의
 const prepare = gulp.series([clean, img]);
 const assets = gulp.series([pug, style, js]);
-const postDev = gulp.parallel([webserver, watch]); //gulp.parallel은 병렬실행(동시실행)시 사용, gulp.series는 순차실행 시 사용
+const live = gulp.parallel([webserver, watch]); //gulp.parallel은 병렬실행(동시실행)시 사용, gulp.series는 순차실행 시 사용
 
 // npm run dev : 그룹화한 task들을 순차적으로 실행
-export const dev = gulp.series([prepare, assets, postDev]);
+export const build = gulp.series([prepare, assets]);
+export const dev = gulp.series([build, live]);
+export const deploy = gulp.series([build, github, clean]);
