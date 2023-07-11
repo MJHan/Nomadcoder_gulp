@@ -1,0 +1,15 @@
+{
+  "name": "supergulp_nomadcoder",
+  "version": "1.0.0",
+  "description": "Learn Gulp by building an awesome development environment",
+  "main": "index.js",
+  "repository": "https://github.com/MJHan/Nomadcoder_gulp.git",
+  "keywords": [
+    "gulp"
+  ],
+  "author": "MJHan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MJHan/Nomadcoder_gulp/issues"
+  }
+}
