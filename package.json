@@ -11,5 +11,15 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MJHan/Nomadcoder_gulp/issues"
+  },
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.8",
+    "@babel/preset-env": "^7.22.7",
+    "@babel/register": "^7.22.5",
+    "gulp": "^4.0.2"
   }
 }
